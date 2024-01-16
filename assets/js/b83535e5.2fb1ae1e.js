@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkACRA_Point_V3_Education=self.webpackChunkACRA_Point_V3_Education||[]).push([[3132],{8770:a=>{a.exports=JSON.parse('{"label":"hola","permalink":"/ilovedev/blog/tags/hola","allTagsPath":"/ilovedev/blog/tags","count":1,"unlisted":false}')}}]);
