@@ -8,8 +8,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'wauth 교육',
-  tagline: '고등기술연구소',
+  title: 'I Love Development',
+  tagline: '김은국',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -68,7 +68,7 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'wauth 교육',
+        title: 'I Love Development',
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.svg',
