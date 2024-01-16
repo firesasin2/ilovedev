@@ -23,6 +23,7 @@ const config = {
   organizationName: 'firesasin2', // Usually your GitHub org/user name.
   projectName: 'ilovedev', // Usually your repo name.
 
+  deploymentBranch: 'gh-pages',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
