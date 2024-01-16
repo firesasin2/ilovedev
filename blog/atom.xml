@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://firesasin2.github.io/ilovedev/blog</id>
-    <title>wauth 교육 Blog</title>
+    <title>I Love Development Blog</title>
     <updated>2021-08-26T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://firesasin2.github.io/ilovedev/blog"/>
-    <subtitle>wauth 교육 Blog</subtitle>
+    <subtitle>I Love Development Blog</subtitle>
     <icon>https://firesasin2.github.io/ilovedev/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
