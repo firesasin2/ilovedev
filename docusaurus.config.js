@@ -16,13 +16,13 @@ const config = {
   url: 'https://firesasin2.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/ilovedev/',
   trailingSlash: false,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'firesasin2', // Usually your GitHub org/user name.
-  projectName: 'firesasin2.github.io', // Usually your repo name.
+  projectName: 'ilovedev', // Usually your repo name.
 
   deploymentBranch: 'gh-pages',
   onBrokenLinks: 'throw',
