@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkACRA_Point_V3_Education=self.webpackChunkACRA_Point_V3_Education||[]).push([[7446],{7830:o=>{o.exports=JSON.parse('{"permalink":"/ilovedev/blog/tags/facebook","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
