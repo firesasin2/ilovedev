@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkACRA_Point_V3_Education=self.webpackChunkACRA_Point_V3_Education||[]).push([[304],{673:s=>{s.exports=JSON.parse('{"label":"docusaurus","permalink":"/ilovedev/blog/tags/docusaurus","allTagsPath":"/ilovedev/blog/tags","count":4,"unlisted":false}')}}]);

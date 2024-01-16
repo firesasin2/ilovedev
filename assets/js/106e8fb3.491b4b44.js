@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkACRA_Point_V3_Education=self.webpackChunkACRA_Point_V3_Education||[]).push([[1387],{5745:e=>{e.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);
