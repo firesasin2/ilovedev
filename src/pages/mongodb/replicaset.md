@@ -26,3 +26,10 @@
 
 ### Replica Set
   + 반드시 과반수 이상의 멤버가 투표해서 승인을 얻어야 Primary를 선출 할 수 있음
+  + 하나의 Replica Set에서 HA를 보장하기 위해서는 최소 3개 이상의 멤버가 필요
+    + 3대의 서버가 부담이 되는 경우, Primary + Primary Stand-by Member(Secondary) + Arbiter(가상서버 or 공용 서버)로 구성 할수도 있음
+
+### Primary 선출
+  + Replica Set에 현재 Primary가 없으면 Primary를 선출함 (다른 경우는 없음)
+  + Replica Set 멤버들은 Primary가 없어진 것을 알아채면, 즉시 새로운 Primary를 선출한다.
+

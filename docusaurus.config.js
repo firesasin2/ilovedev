@@ -76,11 +76,11 @@ const config = {
         items: [
 		  {to: '/wauth/go', label: 'Go', position: 'left'},
 		  {to: '/wauth/design', label: '설계(구조)', position: 'left'},
+      {to: '/wauth/libutool', label: 'libutool.go', position: 'left'},
+      {to: '/wauth/manager', label: 'manager', position: 'left'},
 		  {to: '/wauth/init.go', label: 'init.go', position: 'left'},
 		  {to: '/wauth/makefile', label: '빌드', position: 'left'},
-		  {to: '/wauth/makefile', label: 'libutool.go', position: 'left'},
 		  {to: '/wauth/makefile', label: 'main.go', position: 'left'},
-      {to: '/wauth/makefile', label: 'manager', position: 'left'},
       {to: '/mongodb/replicaset', label: 'MongoDB', position: 'left'},
 		  // {to: '/wauth/makefile', label: '미들웨어', position: 'left'},
       // {to: '/wauth/makefile', label: 'historytype.csv', position: 'left'},
@@ -90,21 +90,21 @@ const config = {
 		  // {to: '/wauth/makefile', label: '라이선스', position: 'left'},
         ],
       },
-      footer: {
-        style: 'dark',
-        links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Tutorial',
-                to: '/docs/intro',
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-      },
+      // footer: {
+      //   style: 'dark',
+      //   links: [
+      //     {
+      //       title: 'Docs',
+      //       items: [
+      //         {
+      //           label: 'Tutorial',
+      //           to: '/docs/intro',
+      //         },
+      //       ],
+      //     },
+      //   ],
+      //   copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      // },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,

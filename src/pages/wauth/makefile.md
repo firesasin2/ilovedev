@@ -2,6 +2,20 @@
 # 빌드
 <br/>
 
+### 빌드하기
+  + Go 언어에서의 빌드 프로세스는 간단하고 효율적
+  + Go는 정적 바이너리를 생성하므로 외부 종속성이 없는 실행 가능한 파일을 만들 수 있음
+  + 기본 빌드하기
+  ```bash
+  go build // 바이너리 파일의 이름은 현재 디렉토리의 이름과 동일하게 설정됨
+  ```
+  + 실행 파일 이름주기
+  ```bash
+  go build -o wauth
+  ```
+  + Go는 의존성을 자동으로 처리하므로 모든 필요한 패키지 및 파일을 찾아 컴파일함
+<br/>
+
 ### make clean - high quality and fast image
 <br/>
 
@@ -12,10 +26,6 @@
 <br/>
 
 ### go run main.go
-<br/>
-
-### go build -o
-  + go build -o wauth
 <br/>
 
 ### strip

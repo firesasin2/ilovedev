@@ -139,6 +139,55 @@
 	  ```
 <br/>
 
+### interface
+  + 추상화: 인터페이스는 객체의 공통 동작을 정의하기 때문에, 구체적인 구현에 대한 정보를 제공하지 않음. 따라서 인터페이스는 객체의 구현을 캡슐화하는 데 사용
+  + 다형성: 인터페이스는 객체의 구현을 캡슐화하기 때문에, 서로 다른 구현을 가진 객체를 동일한 방식으로 처리할 수 있음
+  + 유연성: 인터페이스는 구현이 없는 메서드의 집합이기 때문에, 다양한 방식으로 구현할 수 있음
+  + 메서드의 집합을 정의하는 추상 타입
+  + 구체적인 타입을 나타내지 않고, 단지 특정 메서드 집합을 구현한 타입
+  + 이를 통해 다형성을 구현하고 코드 재사용을 촉진하는 등의 이점을 얻을 수 있음
+  + 예
+    ```go
+    type MyInterface interface {
+      Method1() string
+      Method2(int) error
+      // ... 다양한 메서드들
+    }
+
+    // MyType은 MyInterface를 구현하는 구체적인 타입입니다.
+    type MyType struct {
+        Data string
+    }
+
+    // Method1은 MyType이 MyInterface의 메서드를 구현하도록 합니다.
+    func (mt MyType) Method1() string {
+        return "Data: " + mt.Data
+    }
+
+    // Method2도 구현합니다.
+    func (mt MyType) Method2(value int) error {
+        fmt.Println("Received value:", value)
+        return nil
+    }
+
+    func main() {
+        // MyType을 MyInterface로 선언
+        var myInterfaceInstance MyInterface
+        myInterfaceInstance = MyType{Data: "Hello, World!"}
+
+        // MyInterface의 메서드 호출
+        result := myInterfaceInstance.Method1()
+        fmt.Println(result)
+
+        // MyInterface의 또 다른 메서드 호출
+        err := myInterfaceInstance.Method2(42)
+        if err != nil {
+            fmt.Println("Error:", err)
+        }
+    }
+    ```
+<br/>
+
 ### 구조체
   + 선언
     ```go
