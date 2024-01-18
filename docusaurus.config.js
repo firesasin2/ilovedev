@@ -76,6 +76,7 @@ const config = {
         items: [
 		  {to: '/wauth/go', label: 'Go', position: 'left'},
 		  {to: '/wauth/design', label: '설계(구조)', position: 'left'},
+      {to: '/wauth/libinfo', label: 'libinfo.go', position: 'left'},
       {to: '/wauth/libutool', label: 'libutool.go', position: 'left'},
       {to: '/wauth/manager', label: 'manager', position: 'left'},
 		  {to: '/wauth/init.go', label: 'init.go', position: 'left'},

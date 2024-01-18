@@ -2,9 +2,20 @@
 # 설계(구조)
 <br/>
 
-### 역할
+### wauth 역할
   + 인증과 권한을 담당하는 프로세스
   + 인증대상: 관리자, 사용자, API토큰
+<br/>
+
+### wauth구성
+  + package 구성
+    + main 패키지
+    + "github.com/acrav3/wauth/usermanager" 패키지
+    + ...
+    + "github.com/acrav3/wauth/admininboxmanager" 패키지
+  + 
+  + libinfo/libinfo.go
+    + 모든 구조체를 정의한 함수
 <br/>
 
 ### manager 형식
