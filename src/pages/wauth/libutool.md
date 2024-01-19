@@ -258,8 +258,30 @@ libutool은 util함수. 모든 Repositories에서 사용함
         return &le
     }
     ```
+  + 사용예
+    ```go
+    // 토큰 정책 조회
+	tokenPolicy, err := tokenPolicyMgr.Get(r.Context(), "admin")
+	if err != nil {
+		logging.Errorln(err)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(tool.ErrorStack(err, "E_DEFT_0000").Error()))
+		return
+	}
+
+    // {handleadminlogin:355}[E_DEFT_0001]<- error occurred
+    ```
 
 ### logging.go
+  + 레벨
+    - Fatal : 치명적 에러 (로깅 후 프로세스가 종료됨)
+    - Error : 에러
+    - Normal : 일반로그
+    - Debug : 디버깅용 로그
+    - Verbose : 낮은수준 로그
+  + 사용예
+    - logging := NewLogging().SetFile("/tmp/a.log").SetConsole(true).SetLevel(true, true, true, true).SetLimit(2, 50000)
+	    * 메서드 체이닝을 통해 다양한 로깅 설정을 지정
   + Debugln 함수
     ```go
     // LogLevel : LogLevel 대한 고유이름

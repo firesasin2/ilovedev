@@ -2,12 +2,131 @@
 # Manager
 <br/>
 
-### manager.Create()
-  + Create 함수 호출
+### AdminManager
+  + 구조체 (AdminManager는 구조체)
     ```go
-    err := adminMgr.Create(r.Context(), req, "Base")
+    package adminmanager // package 이름 정의(main이 아님)
+
+    type AdminManager struct {
+        Log *tool.Logging
+
+        Admins sync.Map
+        AESKey string
+        Mutex  sync.RWMutex
+
+        client        *libmongo.MongoClient
+        Admin         *mongo.Collection //admin  컬랙션
+        TimeClass     *mongo.Collection //read-only
+        adminrole     *mongo.Collection //read-only
+        TokenPolicy   *mongo.Collection //read-only
+        NodeClassTree *mongo.Collection //read-only
+        NodeClass     *mongo.Collection //read-only
+    }
+    ```
+  + 선언
+    ```go
+    adminMgr, err = adminmanager.New(ctx, logging, client, AESKey)
+	if err != nil {
+		logging.Fatalln(err)
+	}
+    
+    func New(ctx context.Context, l *tool.Logging, client *libmongo.MongoClient, AESKey string) (*AdminManager, error) {
+
+        manager, err := NewAdminManager(ctx, l, client, AESKey)
+        if err != nil {
+            l.Errorln(err)
+            return nil, err
+        }
+
+        return manager, nil
+    }
+
+    func NewAdminManager(ctx context.Context, l *tool.Logging, client *libmongo.MongoClient, AESKey string) (*AdminManager, error) {
+        m := AdminManager{
+            Log:    l,
+            AESKey: AESKey,
+        }
+
+        m.client = client
+        m.Admin = client.Database.Collection("admin")
+        m.TimeClass = client.Database.Collection("timeclass")         //read-only
+        m.adminrole = client.Database.Collection("adminrole")         //read-only
+        m.TokenPolicy = client.Database.Collection("tokenpolicy")     //read-only
+        m.NodeClassTree = client.Database.Collection("nodeclasstree") //read-only
+        m.NodeClass = client.Database.Collection("nodeclass")         //read-only
+
+        return &m, nil
+    }
+    ```
+
+### manager.List()
+  + List 함수 호출
+    ```go
+    people, err := adminMgr.List(r.Context(), query, fields, sort, max)
     if err != nil {
     	logging.Errorln(err)
+    }
+    ```
+  + List 함수
+    ```go
+    func (m *AdminManager) List(ctx context.Context, query string, fields string, sort string, max int64) ([]info.Admin, error) {
+        admins := []info.Admin{}
+
+        // ID icontain "apadmin"
+        f, err := filter.ConvertFilter(query)
+        if err != nil {
+            m.Log.Errorln(err)
+            return []info.Admin{}, tool.ErrorStack("E_AGFT_0001")
+        }
+        // map[ID:map[$options:i $regex:apadmin]]
+
+        projection, err := filter.ConvertFields(fields)
+        if err != nil {
+            m.Log.Errorln(err)
+            return []info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+        }
+
+        order, err := filter.ConvertSort(sort)
+        if err != nil {
+            m.Log.Errorln(err)
+            return []info.Admin{}, tool.ErrorStack(err, "E_AGFT_0001")
+        }
+
+        // max가 0이면, 모두 조회
+        opt := options.Find().SetLimit(max)
+        opt = opt.SetProjection(projection)
+        if len(order) > 0 {
+            opt = opt.SetSort(order)
+        }
+
+        cursor, err := m.Admin.Find(ctx, f, opt)
+        if err != nil {
+            m.Log.Errorln(err)
+            return []info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+        }
+        defer cursor.Close(ctx)
+
+        err = cursor.All(ctx, &admins)
+        if err != nil {
+            m.Log.Errorln(err)
+            return []info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+        }
+
+        // 관리자 역할 이름과 결합(join)
+        for i := 0; i < len(admins); i++ {
+            if len(admins[i].AdminRole_ID) == 0 {
+                continue
+            }
+
+            role, err := m.관리자역할구하기(admins[i].AdminRole_ID)
+            if err != nil {
+                m.Log.Errorln(err)
+                continue
+            }
+            admins[i].AdminRole_Name = role.Name
+        }
+
+        return admins, nil
     }
     ```
 <br/>
@@ -175,11 +294,46 @@
             return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
         }
 
-        if result.MatchedCount == 0 {
-            m.Log.Errorln("매치되는 사용자가 없음")
-            return info.Admin{}, info.Admin{}, tool.ErrorStack(fmt.Errorf("ID=[%s]에 매치되는 사용자가 없음", admin.ID), "E_ADMN_0011")
-        }
-
         return oldAdmin, newAdmin, nil
     }
   ```
+<br/>
+
+### manager.Delete()
+  + Delete 함수 호출
+    ```go
+    err := adminMgr.Delete(r.Context(), req.ID)
+    if err != nil {
+    	logging.Errorln(err)
+    }
+    ```
+
+  + Delete 함수
+    ```go
+    func (m *AdminManager) Delete(ctx context.Context, id string) (info.Admin, info.Admin, error) {
+
+        m.Mutex.Lock()
+        defer m.Mutex.Unlock()
+
+        oldAdmin := info.Admin{}
+        err := m.Admin.FindOne(ctx, bson.M{"ID": id}).Decode(&oldAdmin)
+        if err != nil {
+            m.Log.Errorln(err)
+            return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+        }
+
+        // 로직: 필수항목은 조작 제한
+        if oldAdmin.Mandantory {
+            return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0003")
+        }
+
+        // DB에서 사용자 삭제
+        r, err := m.Admin.DeleteOne(ctx, bson.M{"ID": id})
+        if err != nil {
+            m.Log.Errorln(err)
+            return info.Admin{}, info.Admin{}, err
+        }
+
+        return oldAdmin, info.Admin{}, nil
+    }
+    ```

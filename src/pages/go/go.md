@@ -49,6 +49,9 @@
     - Golang으로 작성된 코드의 빌드 속도는 Java, Python, JavaScript 등과 같은 인터프리터 언어에 비해 훨씬 빠름
   + 크로스 플랫폼 지원
     - Go 언어는 크로스 플랫폼을 목표로 하며, 여러 운영체제와 아키텍처에서 동작할 수 있도록 컴파일할 수 있음
+    ```go
+    GOOS=windows GOARCH=amd64 go build -o output.exe
+    ```
 <br/>
 
 ### 함수
@@ -288,58 +291,6 @@
   ```
 <br/>
 
-### context
-  + 여러 고루틴 간에 값 및 취소 신호를 전달하기 위한 표준화된 방법을 제공(타임아웃, 취소, 값 전달 등)
-  + 사용예
-    ```go title=""
-    package main
-
-    import (
-        "context"
-        "fmt"
-        "time"
-    )
-
-    func main() {
-        // Background 컨텍스트는 종료 시그널이 없음.
-        ctx := context.Background()
-
-        // WithCancel을 사용하여 취소 가능한 컨텍스트를 생성함.
-        ctx, cancel := context.WithCancel(ctx)
-
-        // WithTimeout을 사용하여 타임아웃이 있는 컨텍스트를 생성함.
-        ctxWithTimeout, timeoutCancel := context.WithTimeout(ctx, 3*time.Second)
-
-        // 값을 저장하고 전달하기 위한 컨텍스트 생성
-        ctxWithValue := context.WithValue(ctx, "key", "value")
-
-        // 고루틴에서 비동기적으로 작업 수행
-        go func() {
-            // 컨텍스트 취소 시그널이 오면 작업 중단
-            <-ctx.Done()
-            fmt.Println("Task canceled.")
-        }()
-
-        // 타임아웃 시간 동안 대기
-        select {
-        case <-time.After(2 * time.Second):
-            fmt.Println("Timeout passed.")
-        case <-ctxWithTimeout.Done():
-            fmt.Println("Context with timeout canceled.")
-        }
-
-        // 컨텍스트에 저장된 값 읽기
-        if value, ok := ctxWithValue.Value("key").(string); ok {
-            fmt.Println("Value from context:", value)
-        }
-
-        // 취소 함수 호출하여 컨텍스트 종료
-        cancel()
-        timeoutCancel()
-    }
-    ```
-<br/>
-	
 ### init.go
   + 패키지 초기화: 패키지의 초기화 로직을 담당하며, 프로그램이 실행될 때 자동으로 호출됨(프로젝트의 루트 디렉토리나 패키지 디렉토리 내에 위치할 수 있음)
   + 전역 변수 초기화: var 키워드를 사용하여 전역 변수를 선언하고 기본값을 설정 할 수 있음.
