@@ -10,6 +10,8 @@
     	logging.Errorln(err)
     }
     ```
+<br/>
+
   + Create 함수
     ```go
     func (m *AdminManager) Create(ctx context.Context, person info.Admin, Regulation string) (error) {
@@ -108,4 +110,76 @@
         return nil
     }
     ```
-        
+<br/>
+
+### manager.Update()
++ Update 함수 호출
+  ```go
+    err := adminMgr.Update(r.Context(), req, true)
+    if err != nil {
+    	logging.Errorln(err)
+    }
+  ```
+<br/>
+
++ Update 함수
+  ```go
+    func (m *AdminManager) Update(ctx context.Context, admin info.Admin, onlyUpdateTag bool) (info.Admin, info.Admin, error) {
+
+        m.Mutex.Lock()
+        defer m.Mutex.Unlock()
+
+        oldAdmin := info.Admin{}
+        err := m.Admin.FindOne(ctx, bson.M{"ID": admin.ID}).Decode(&oldAdmin)
+        if err != nil {
+            m.Log.Errorln(err)
+            return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+        }
+
+        newAdmin := oldAdmin
+
+        syncAttributes := []string{}
+        if onlyUpdateTag {
+            // 로직: update가 있는 속성들 이름을 가져옵니다.
+            syncAttributes, err = tool.GetAttributesName(info.Admin{}, "update", true)
+            if err != nil {
+                return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+            }
+        } else {
+            // 로직: 모든 속성들 이름을 가져옵니다.
+            t := reflect.TypeOf(info.Admin{})
+            for i := 0; i < t.NumField(); i++ {
+                syncAttributes = append(syncAttributes, t.Field(i).Name)
+            }
+        }
+
+        // 로직: 동기화 할 속성들의 값을 newAdmin에 넣습니다.
+        for _, syncAttribute := range syncAttributes {
+            r := reflect.ValueOf(admin)
+            f := reflect.Indirect(r).FieldByName(syncAttribute)
+
+            tool.SetValueToStruct(&newAdmin, syncAttribute, f)
+        }
+
+        // newAdmin를 bson.M으로 변환
+        newAdminBson := bson.M{}
+        v := reflect.ValueOf(newAdmin)
+        for i := 0; i < v.NumField(); i++ {
+            newAdminBson[v.Type().Field(i).Name] = v.Field(i).Interface()
+        }
+
+        // 로직: 업데이트
+        result, err := m.Admin.UpdateOne(ctx, bson.M{"ID": admin.ID}, bson.M{"$set": newAdminBson})
+        if err != nil {
+            m.Log.Errorln(err)
+            return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+        }
+
+        if result.MatchedCount == 0 {
+            m.Log.Errorln("매치되는 사용자가 없음")
+            return info.Admin{}, info.Admin{}, tool.ErrorStack(fmt.Errorf("ID=[%s]에 매치되는 사용자가 없음", admin.ID), "E_ADMN_0011")
+        }
+
+        return oldAdmin, newAdmin, nil
+    }
+  ```

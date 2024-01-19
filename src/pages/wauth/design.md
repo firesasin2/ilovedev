@@ -112,3 +112,50 @@
 | 관리대상서버 | wagent  | 에이전트 프로세스 |
 | 접속기 | ACRA Point.exe | PC 사용자 클라이언트 프로그램 |
 <br/>
+
+### Lock 매커니즘
+  + 많은 요청들 사이에서 동시성 문제(데이터 정합성)를 관리하기 위하여 lock 매커니즘을 사용
+  + sync.Mutex 을 사용 (Lock, Unlock)
+  + read lock을 사용하지 않음 (sync.RWMutex)
+  + 예제
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "sync"
+      "time"
+    )
+
+    // 공유 데이터
+    var sharedData int
+
+    // 뮤텍스 생성
+    var mutex sync.Mutex
+
+    // 고루틴에서 공유 데이터를 변경하는 함수
+    func modifySharedData(id int) {
+      // 뮤텍스 락 획득
+      mutex.Lock()
+      defer mutex.Unlock()
+
+      // 공유 데이터 변경
+      sharedData++
+      fmt.Printf("Goroutine %d modified sharedData to %d\n", id, sharedData)
+    }
+
+    func main() {
+      // 여러 고루틴이 동시에 공유 데이터를 변경하는 예제
+
+      // 10개의 고루틴 실행
+      for i := 1; i <= 10; i++ {
+        go modifySharedData(i)
+      }
+
+      // 잠시 대기하여 모든 고루틴이 실행되도록 함
+      time.Sleep(time.Second)
+
+      // 최종 결과 출력
+      fmt.Printf("Final sharedData value: %d\n", sharedData)
+    }
+    ```

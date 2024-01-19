@@ -154,6 +154,61 @@ libutool은 util함수. 모든 Repositories에서 사용함
         return false
     }
     ```
+  + 해시생성 함수
+    ```go
+    func (s *FileSum) Make(file string) error {
+        body, err := os.ReadFile(file)
+        if err != nil {
+            return err
+        }
+        if len(body) == 0 {
+            return fmt.Errorf("파일크기없음")
+        }
+
+        pbk, err := Pbkdf2Hash(body)
+        if err != nil {
+            return err
+        }
+
+        sum := file + ".sum"
+        err = os.WriteFile(sum, pbk, 0600)
+        if err != nil {
+            return err
+        }
+
+        err = s.H.Make(sum)
+        if err != nil {
+            return err
+        }
+        return nil
+    }
+    ```
+  + 해시검사 함수
+    ```go
+    func (s *FileSum) Has(file string) error {
+        sum := file + ".sum"
+        err := s.H.Has(sum)
+        if err != nil {
+            return err
+        }
+
+        b, err := os.ReadFile(sum)
+        if err != nil {
+            return err
+        }
+        if len(b) <= s.H.LenHash {
+            return fmt.Errorf("해시길이짧음")
+        }
+        sumbody := b[:len(b)-s.H.LenHash]
+
+        origin, err := os.ReadFile(file)
+        if err != nil {
+            return err
+        }
+
+        return ComparePbkdf2Hash(origin, sumbody)
+    }
+    ```
 <br/>
 
 ### error.go
@@ -201,5 +256,63 @@ libutool은 util함수. 모든 Repositories에서 사용함
         }
 
         return &le
+    }
+    ```
+
+### logging.go
+  + Debugln 함수
+    ```go
+    // LogLevel : LogLevel 대한 고유이름
+    type LogLevel int
+
+    // Debugln : format된 debug 로깅
+    func (l *Logging) Debugln(param ...interface{}) {
+        if l == nil {
+            return
+        }
+        if l.isDebug {
+            l.writeln(Debug, param...)
+        }
+    }
+
+    func (l *Logging) writeln(level LogLevel, param ...interface{}) {
+        _, fn, line, _ := runtime.Caller(2)
+        fn = strings.TrimSuffix(fn, ".go")
+        f := strings.Split(fn, "/")
+        s := fmt.Sprintln(param...)
+
+        w := fmt.Sprintf("%s [%s:%d] %s", level.String(), f[len(f)-1], line, s)
+        // 콘솔 출력이 설정되어 있다면, 콘솔에도 출력
+        if l.hasConsole {
+            log.Printf("%s", w)
+        }
+
+        l.send(level, w)
+    }
+
+    // send : 가장 낮은 수준의 쓰기함수이다.
+    func (l *Logging) send(level LogLevel, text string) {
+        // 락
+        l.Mutex.Lock()
+        defer func() {
+            //Fatal 이면 프로세스를 강제 종료시킬 것이므로 Unlock해줄 필요없다.
+            if level == Fatal {
+                time.Sleep(100 * time.Millisecond)
+                os.Exit(1)
+            } else {
+                l.Mutex.Unlock()
+            }
+        }()
+
+        if len(l.file) > 0 {
+            if l.maxSize > 0 && l.curSize > l.maxSize {
+                l.backup()
+                l.archive()
+            }
+            if l.dest != nil {
+                l.curSize = l.curSize + 20 + int64(len(text)) + 1
+                l.dest.Printf(text)
+            }
+        }
     }
     ```
