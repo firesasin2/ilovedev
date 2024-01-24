@@ -93,15 +93,16 @@ const config = {
               {to: '/wauth/init', label: 'init.go'},
               {to: '/wauth/main', label: 'main.go'},
               {to: '/wauth/manager', label: 'manager'},
-              {to: '/wauth/handler', label: 'handler.go'},
+              {to: '/wauth/handler', label: 'handler'},
             ],
           },
           {
             type: 'dropdown',
             to: '/mongodb/replicaset', label: 'MongoDB', position: 'left', 
             items: [
-              {to: '/mongodb/replicaset', label: 'MongoDB(복제)'},
-              {to: '/mongodb/sharding', label: 'MongoDB(샤딩)'},
+              {to: '/mongodb/mongodb', label: 'MongoDB'},
+              {to: '/mongodb/replicaset', label: 'ReplicaSet'},
+              {to: '/mongodb/sharding', label: 'Sharding'},
             ],
           },
           
