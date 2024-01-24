@@ -45,5 +45,5 @@ init 함수는 자동으로 호출되는 특별한 함수로, 패키지 수준�
       }
       logging.Debugln("Mongodb Connect success")
     }()
-  ```
+    ```
   + libmongo - NewMongoClient

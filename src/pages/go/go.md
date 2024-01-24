@@ -54,6 +54,61 @@
     ```
 <br/>
 
+### 예약어
+  + 예약어들은 식별자(변수명, 함수명 등)로 사용될 수 없음
+  + 주요 예약어 목록
+    + 기본 자료형과 상수
+      + true, false: 불리언 상수.
+      + int, int8, int16, int32, int64: 정수 자료형.
+      + uint, uint8, uint16, uint32, uint64: 부호 없는 정수 자료형.
+      + float32, float64: 부동소수점 자료형.
+      + complex64, complex128: 복소수 자료형.
+      + string: 문자열 자료형.
+      + nil: 포인터, 함수, 인터페이스, 슬라이스, 채널, 맵의 zero value.
+
+    + 제어 구조
+      + if, else: 조건문.
+      + switch, case, default: 스위치문.
+      + select, case: 채널 통신과 타임아웃을 다루는데 사용되는 키워드.
+
+    + 반복문
+      + for, range: 반복문.
+      
+    + 함수와 메서드
+      + func: 함수와 메서드를 정의하는 키워드.
+      + return: 함수나 메서드에서 값을 반환하는 키워드.
+      + defer: 지연된 함수 호출을 정의하는데 사용되는 키워드.
+        + Go 언어에서 제공하는 특별한 키워드로, 함수나 메서드가 종료되기 직전에 실행되도록 하는 기능을 제공
+        + 함수의 마지막 부분에서 어떤 작업을 처리하거나 리소스를 해제하는 등의 작업을 효과적으로 수행
+          ```go
+          package main
+
+          import "fmt"
+
+          func main() {
+            fmt.Println("Start")
+
+            // 함수가 종료되기 직전에 defer로 지정한 문장이 실행됨
+            defer fmt.Println("Deferred statement")
+
+            // 다른 코드들
+            fmt.Println("End")
+          }
+          ```
+
+    + 타입과 구조체
+      + type: 새로운 타입을 정의하는 키워드.
+      + struct: 구조체를 정의하는 키워드.
+      + interface: 인터페이스를 정의하는 키워드.
+
+    + 메모리 관리
+      + new: 새로운 인스턴스를 할당하고 초기화하는 키워드.
+      + make: 참조 타입(맵, 슬라이스, 채널)을 생성하는 키워드.
+
+    + 기타
+      + package, import: 패키지와 임포트를 정의하는 키워드.
+      + const, var: 상수와 변수를 정의하는 키워드.
+
 ### 함수
   + 함수 리턴 값이 여러개 가능
   + 함수 선언부에 반환 타입을 적을때, 변수명까지 지정해서 사용 가능
@@ -160,7 +215,7 @@
   + 메서드의 집합을 정의하는 추상 타입
   + 구체적인 타입을 나타내지 않고, 단지 특정 메서드 집합을 구현한 타입
   + 이를 통해 다형성을 구현하고 코드 재사용을 촉진하는 등의 이점을 얻을 수 있음
-  + 예
+  + 예제
     ```go
     type MyInterface interface {
       Method1() string
@@ -236,6 +291,41 @@
     // 16   메모리 정렬 때문(12로 예상)
 	  // 메모리 정렬: 데이터에 효과적으로 접근하고자 메모리를 일정 크기 간격으로 정렬하는 것(메모리 패딩)
 	  ```
+  + Embedding
+    - 구조체를 다른 구조체에 포함하는 것
+    - 포함된 구조체의 모든 필드와 메서드는 포함하는 구조체에서 사용할 수 있음(구조체 코드 재사용)
+    - 명시적인 상속의 복잡성을 피하면서도 코드 재사용과 확장성을 유지 할 수 있음
+    - 예제
+      ```go
+      package main
+
+      import "fmt"
+
+      // 부모 구조체
+      type Animal struct {
+        Name string
+      }
+
+      // 자식 구조체
+      type Dog struct {
+        Animal      // Animal 구조체 내장
+        Breed string // 자식 구조체에 추가된 필드
+      }
+
+      func main() {
+        // 자식 구조체의 인스턴스 생성
+        myDog := Dog{
+          Animal: Animal{Name: "Buddy"},
+          Breed:  "Labrador",
+        }
+
+        // 부모 구조체의 필드에 접근
+        fmt.Println("Name:", myDog.Name)
+
+        // 자식 구조체의 필드에 접근
+        fmt.Println("Breed:", myDog.Breed)
+      }
+      ```
 <br/>
 
 ### 배열

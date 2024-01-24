@@ -49,8 +49,65 @@ libinfo는 모든 구조체를 정의한 함수. 모든 Repositories에서 사�
     }
     ```
     + json: GO에서 사용되는 JSON과 매칭되는 필드명 이름
+      + JSON 직렬화 및 역직렬화를 수행할 때 사용되며, 필드의 이름을 해당 JSON 키와 매핑
+        ```go
+        package main
+
+        import (
+          "encoding/json"
+          "fmt"
+        )
+
+        type Admin struct {
+          Name bool `json:"name"`
+        }
+
+        func main() {
+          // Admin 구조체 인스턴스 생성
+          admin := Admin{
+            Name: true,
+          }
+
+          // JSON 직렬화
+          jsonData, err := json.Marshal(admin)
+          if err != nil {
+            fmt.Println("JSON serialization error:", err)
+            return
+          }
+
+          // JSON 출력
+          fmt.Println(string(jsonData)) // {"name":true}
+
+        }
+        ```
       + omitempty: 비어있다면, 해당 필드를 생략
     + bson: MongoDB와 매칭되는 필드명 이름
+      + MongoDB에서 사용되는 BSON 형식의 직렬화 및 역직렬화 시 사용되는 키
+        ```go
+        {
+          "_id" : ObjectId("64ddc27be7e7a1b2a14e986a"),
+          "Mandantory" : true,
+          "ID" : "apadmin",
+          "Name" : "apadmin",
+          "AdminRole_ID" : "Administrator",
+          "IPAddresses" : [
+              "127.0.0.1",
+              "192.168.135.223",
+              "192.168.135.229"
+          ],
+          "Status" : true,
+          "ForceChangePwd" : false,
+          "CreateTimestamp" : NumberLong(0),
+          "WebLastAccessTimestamp" : NumberLong(1706055340),
+          "PasswordLastChangedTimestamp" : NumberLong(1692256577),
+          "OfflineSecret" : "",
+          "OfflineSecretLastChangedTimestamp" : NumberLong(1699935162),
+          "OnlineSecretLastChangedTimestamp" : NumberLong(0),
+          "Password" : "S3SGOMg5CQuR9waAMol4Fp+SX1cVfpqZeGn+ibbgT4PPN634W09QhUuBFxtPh/Io",
+          "NumLogonAttempt" : NumberInt(0),
+          "WebLoginSuspendUntilTimestamp" : NumberLong(1692256524),
+        }
+        ```
       + omitempty: 비어있다면, 해당 필드를 생략
     + update: 웹에서 요청시, 해당 필드 수정 가능한지 여부 (update가 "true이면" 웹에서 수정 가능)
     + history: 이력에 기록을 남길지 여부 (history가 "true이면" 이력에 남김)

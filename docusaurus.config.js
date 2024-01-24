@@ -93,6 +93,7 @@ const config = {
               {to: '/wauth/init', label: 'init.go'},
               {to: '/wauth/main', label: 'main.go'},
               {to: '/wauth/manager', label: 'manager'},
+              {to: '/wauth/handler', label: 'handler.go'},
             ],
           },
           {

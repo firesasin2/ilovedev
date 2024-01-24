@@ -58,6 +58,7 @@
         return &m, nil
     }
     ```
+<br/>
 
 ### manager.List()
   + List 함수 호출
@@ -72,13 +73,13 @@
     func (m *AdminManager) List(ctx context.Context, query string, fields string, sort string, max int64) ([]info.Admin, error) {
         admins := []info.Admin{}
 
-        // ID icontain "apadmin"
+        // query: ID icontain "apadmin"
         f, err := filter.ConvertFilter(query)
         if err != nil {
             m.Log.Errorln(err)
             return []info.Admin{}, tool.ErrorStack("E_AGFT_0001")
         }
-        // map[ID:map[$options:i $regex:apadmin]]
+        // f: map[ID:map[$options:i $regex:apadmin]]
 
         projection, err := filter.ConvertFields(fields)
         if err != nil {

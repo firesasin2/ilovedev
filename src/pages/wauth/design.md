@@ -26,6 +26,7 @@
     - 싱글톤과는 다르게 여러 개의 인스턴스를 생성할 수 있음(ACRAd에서는 대부분 하나의 인스턴스만 생성)
     - 객채지향
   + new()로 초기화
+  + 대부분의 manager는 List, Create, Update, Delete를 가지고 있음
   + manager.함수이름()으로 호출 가능
     ```go
     package main

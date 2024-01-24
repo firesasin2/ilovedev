@@ -7,6 +7,7 @@ libutool은 util함수. 모든 Repositories에서 사용함
   + 모든 암호화 함수는 국가용 보안요구사항 3를 따름(CC인증)
   + salt 생성 함수
     + pbkdf2를 호출 할때 사용
+    + 많은 리눅스 장비들이 shadow파일에 비밀번호를 저장할때 salt + hashed_password 형식으로 저장하고 있음
     + Salt()
       ```go
       func Salt(size int) ([]byte, error) {
@@ -47,6 +48,7 @@ libutool은 util함수. 모든 Repositories에서 사용함
       ```go
       func DecodeBase64AndAES256CTRDecrypt(key string, data string) ([]byte, error) {
 
+        // Base64 디코딩
         ciphertext, err := base64.StdEncoding.DecodeString(data)
         if err != nil {
             return []byte{}, err
@@ -85,11 +87,12 @@ libutool은 util함수. 모든 Repositories에서 사용함
       }
       ```
   + 해시값 생성 함수
+    + PBKDF2(Password-Based Key Derivation Function 2) 알고리즘을 사용
     + Pbkdf2Hash64()
         ```go
         func Pbkdf2Hash64(data []byte) (string, error) {
             salt, _ := Salt(SaltSize)
-            key := pbkdf2.Key([]byte(data), salt, 1000, 32, sha256.New)
+            key := pbkdf2.Key([]byte(data), salt, 1000, 32, sha256.New) // 1000은 반복 횟수, 32는 키 길이, 해시 함수로 SHA-256을 사용
 
             hash := append(key, salt...)
             hash64 := base64.StdEncoding.EncodeToString(hash)
@@ -111,6 +114,7 @@ libutool은 util함수. 모든 Repositories에서 사용함
     + ComparePbkdf2Hash64()
         ```go
         func ComparePbkdf2Hash64(data []byte, hash64 string) error {
+            // Base64 디코딩
             hash, err := base64.StdEncoding.DecodeString(hash64)
             if err != nil {
                 return err
@@ -119,7 +123,7 @@ libutool은 util함수. 모든 Repositories에서 사용함
             if len(hash) != 32+SaltSize {
                 return fmt.Errorf("the length of hash must be 48")
             }
-            _ = hash[:len(hash)-SaltSize]
+
             salt := hash[len(hash)-SaltSize:]
 
             key := pbkdf2.Key([]byte(data), salt, 1000, 32, sha256.New)
@@ -271,6 +275,16 @@ libutool은 util함수. 모든 Repositories에서 사용함
 
     // {handleadminlogin:355}[E_DEFT_0001]<- error occurred
     ```
+  + error.csv
+    ```
+    // 코드, 메시지, 메시지상세
+    E_DEFT_0000,관리자에게 문의 바람,관리자에게 문의 바람
+    
+    E_CKAU_0001,로그인 실패,세션 최종사용시간 갱신오류
+    E_CKAU_0002,로그인 실패,알수없는 세션쿠키
+    E_CKAU_0003,로그인 실패,로그인 허용시간 오류
+    ```
+<br/>
 
 ### logging.go
   + 레벨

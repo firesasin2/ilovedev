@@ -1,4 +1,60 @@
 # 내장 라이브러리
+외장라이브러리는 https://github.com/gorilla/mux와 같이 외부 저장소에서 가져와야 하고, 내장 라이브러리는 GO에서 제공하므로 별도의 설치 없이 사용 할 수 있는 라이브러리
+<br/>
+
+### time
+  + 시간과 관련된 작업을 수행하기 위한 다양한 함수와 구조체들을 제공
+  + 시간을 나타내는 구조체, 시간 간의 비교, 시간 포맷팅 및 파싱, 시간 간격 등을 다루는 기능을 제공
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "time"
+    )
+
+    func main() {
+      // 현재 시간
+      now := time.Now()
+      fmt.Println("Current time:", now)         // 2009-11-10 23:00:00 +0000 UTC m=+0.000000001
+
+      // 시간 파싱
+      layout := "2006-01-02 15:04:05"
+      timeStr := "2022-01-01 12:30:00"
+      parsedTime, _ := time.Parse(layout, timeStr)
+      fmt.Println("Parsed time:", parsedTime)   // 2022-01-01 12:30:00 +0000 UTC
+
+      // 포맷팅
+      formattedTime := now.Format(layout)       // time.UnixDate
+      fmt.Println("Formatted time:", formattedTime) // 2009-11-10 23:00:00
+    }
+    ```
+  + 제공하는 레이아웃
+    ```go
+    const (
+        ANSIC       = "Mon Jan _2 15:04:05 2006"
+        UnixDate    = "Mon Jan _2 15:04:05 MST 2006"
+        RubyDate    = "Mon Jan 02 15:04:05 -0700 2006"
+        RFC822      = "02 Jan 06 15:04 MST"
+        RFC822Z     = "02 Jan 06 15:04 -0700" // RFC822 with numeric zone
+        RFC850      = "Monday, 02-Jan-06 15:04:05 MST"
+        RFC1123     = "Mon, 02 Jan 2006 15:04:05 MST"
+        RFC1123Z    = "Mon, 02 Jan 2006 15:04:05 -0700" // RFC1123 with numeric zone
+        RFC3339     = "2006-01-02T15:04:05Z07:00"
+        RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
+        Kitchen     = "3:04PM"
+        // Handy time stamps.
+        Stamp      = "Jan _2 15:04:05"
+        StampMilli = "Jan _2 15:04:05.000"
+        StampMicro = "Jan _2 15:04:05.000000"
+        StampNano  = "Jan _2 15:04:05.000000000"
+    )
+    ```
+  + 레이아웃 2006-01-02 15:04:05 유래
+    ```go
+    Mon Jan 2 15:04:05 -0700 MST 2006
+    0   1   2  3  4  5              6
+    ```
 <br/>
 
 ### flag

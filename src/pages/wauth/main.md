@@ -54,7 +54,9 @@ wauth 프로그램의 진입점(entry point) 파일.
         runtime.GOMAXPROCS(runtime.NumCPU()) // 현재 CPU 수만큼 고루틴의 동시 실행 수를 설정(Go 언어에서 병렬 프로그래밍을 위해 사용되는 코드)
 
         var err error
-        ctx := context.Background()
+
+        ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	    defer cancel()
 
         logging.Debugln("wresource start")
 
@@ -109,6 +111,18 @@ wauth 프로그램의 진입점(entry point) 파일.
   + wauth의 라우터 및 핸들러
   + 기본적으로 gorilla를 사용
     + Gorilla is a web toolkit for the Go programming language that provides useful, composable packages for writing HTTP-based applications.
+  + 기본 예제
+    ```go
+    func main() {
+        r := mux.NewRouter()
+        r.HandleFunc("/", HomeHandler)
+        r.HandleFunc("/products", ProductsHandler)
+        r.HandleFunc("/articles", ArticlesHandler)
+        http.Handle("/", r)
+    }
+    ```
+  + 상세내용
+    + https://github.com/gorilla/mux
   + 소스
     ```go
     // 라우터 및 핸들러 설정
@@ -157,9 +171,10 @@ wauth 프로그램의 진입점(entry point) 파일.
 		logging.Fatalln(err)
 	}
     ```
+<br/>
 
 ### 기타
-  + 배채(쓰레드) 관련 소스 (고루틴)
+  + 배치(쓰레드) 관련 소스 (고루틴)
     ```go
 	// 로직: 랜덤 시간에 라이선스 평가
 	go Thread_LicenseCheck()
@@ -178,7 +193,6 @@ wauth 프로그램의 진입점(entry point) 파일.
 
 	// 로직: 관리자 세션 정리
 	go adminWebSessionMgr.Thread_AdminWebSession()
-
 	// 로직: 사용자 세션 정리
 	go userWebSessionMgr.Thread_UserWebSession()
     ```
