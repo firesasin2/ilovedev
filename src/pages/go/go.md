@@ -363,7 +363,59 @@
 <br/>
 
 ### 채널
+  + 채널은 고루틴 간의 안전한 데이터 통신을 위한 메커니즘으로, 고루틴 간에 데이터를 주고받을 때 사용
+  + 채널은 일종의 파이프로서, 한 고루틴에서 데이터를 보내면 다른 고루틴에서 받을 수 있음
   + 채널을 너무 많이 열면 성능 이슈, 데드락 가능성이 발생 할 수 있음
+    + 예제
+      ```go
+      package main
+
+      import "fmt"
+
+      func main() {
+          // 정수를 주고받을 수 있는 채널 생성
+          ch := make(chan int)
+
+          // 고루틴을 이용하여 데이터를 보내는 함수
+          go func() {
+              time.Sleep(2 * time.Second)
+              ch <- 42 // 42를 채널에 보냄
+          }()
+
+          // 메인 고루틴에서 채널에서 데이터를 받음
+          value := <-ch
+          fmt.Println(value) // 출력: 42
+      }
+      ```
+    + 예제2
+      ```go
+      package main
+
+      import "fmt"
+
+      func sendData(ch chan<- int) {
+          ch <- 1
+          ch <- 2
+          ch <- 3
+          close(ch)
+      }
+
+      func main() {
+          ch := make(chan int)
+
+          // sendData 함수에 채널을 보냄
+          go sendData(ch)
+
+          // 채널에서 값을 읽음
+          for {
+              value, ok := <-ch
+              if !ok {
+                  break // 채널이 닫힌 경우 루프 종료
+              }
+              fmt.Println(value)
+          }
+      }
+      ```
 <br/>
 
 ### nil
