@@ -128,33 +128,4 @@
         + 익명 함수
           + 일반적으로 클로저는 익명 함수로 사용. 익명 함수는 변수에 할당되거나 함수 호출 시 직접 정의될 수 있음
   + 명시적으로 인터페이스를 지정하지 않아도 인터페이스 구현이 가능하여 기존에 있던 코드를 고치지 않고도 유연한 구현이 가능
-    ```go
-    package main
-
-    import "fmt"
-
-    // Printer 인터페이스 정의
-    type Printer interface {
-        Print()
-    }
-
-    // Person 타입 정의
-    type Person struct {
-        Name string
-    }
-
-    // Person 타입에 Print 메서드 추가
-    func (p Person) Print() {
-        fmt.Println(p.Name)
-    }
-
-    func main() {
-        // 묵시적으로 Printer 인터페이스를 구현함
-        var printer Printer = Person{Name: "John"}
-        
-        // 인터페이스 메서드 호출
-        printer.Print() // 출력: John
-    }
-    // Person 타입은 명시적으로 Printer 인터페이스를 구현하겠다는 선언이 없지만, Print 메서드를 가지고 있기 때문에 자동으로 Printer 인터페이스를 구현하게 됨
-    ```
   + 채널을 이용하여 동시성 구현을 락 등을 이용하지 않고 간편하게 할 수 있으며, 언어 고유의 지원으로 교착 상태나 경쟁 상태를 파악하기 쉬움

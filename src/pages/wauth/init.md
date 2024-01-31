@@ -21,7 +21,7 @@ init 함수는 자동으로 호출되는 특별한 함수로, 패키지 수준�
   
 ### mongodb 접속
   + Go 언어용 공식 드라이버 패키지 go.mongodb.org/mongo-driver/mongo
-  + 사용예
+  + 예제
     ```go title="init.go"
     func() {
       option := libmongo.MongoConnectOption{
