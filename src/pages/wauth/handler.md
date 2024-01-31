@@ -72,6 +72,36 @@
       w.Write(b)
     }
     ```
+<br/>
+
+  + ParseHttpQueryString 함수
+    ```go
+    func ParseHttpQueryString(r *http.Request, 기본값 int64) (string, string, string, int64, error) {
+
+      max := int64(0)
+      queryParams := r.URL.Query()
+
+      query := queryParams.Get("filter")
+      fields := queryParams.Get("fields")
+      sort := queryParams.Get("sort")
+      maxString := queryParams.Get("max")
+      if len(maxString) > 0 {
+        maxNum, err := strconv.ParseInt(maxString, 10, 64)
+        if err != nil {
+          err = fmt.Errorf("max값 [%s] 오류 : %s", maxString, err.Error())
+          return "", "", "", -1, err
+        }
+
+        max = maxNum
+      } else {
+        max = 기본값 //기본값
+      }
+
+      return query, fields, sort, max, nil
+    }
+    ```
+<br/>
+
   + 관리자 생성 핸들러
     ```go
     func HandlerCreateAdmin(w http.ResponseWriter, r *http.Request) {

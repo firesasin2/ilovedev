@@ -78,7 +78,8 @@ const config = {
             type: 'dropdown',
             to: '/go/go', label: 'Go', position: 'left', 
             items: [
-              {to: '/go/go', label: 'Go'},
+              {to: '/go/go', label: 'Go (기본)'},
+              {to: '/go/go2', label: 'Go (심화)'},
               {to: '/go/standardlibrary', label: '내장라이브러리'},
               {to: '/go/make', label: '빌드'},
             ],
@@ -87,13 +88,14 @@ const config = {
             type: 'dropdown',
             to: '/wauth/design', label: 'wauth', position: 'left', 
             items: [
-              {to: '/wauth/design', label: '설계(구조)'},
+              {to: '/wauth/design', label: '설계 (구조)'},
               {to: '/wauth/libinfo', label: 'libinfo.go'},
               {to: '/wauth/libutool', label: 'libutool.go'},
               {to: '/wauth/init', label: 'init.go'},
               {to: '/wauth/main', label: 'main.go'},
               {to: '/wauth/manager', label: 'manager'},
               {to: '/wauth/handler', label: 'handler'},
+              {to: '/wauth/middleware', label: 'middleware'},
             ],
           },
           {

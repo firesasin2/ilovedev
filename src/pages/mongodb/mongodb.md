@@ -38,7 +38,14 @@ NoSQL(Not Only SQL) 데이터베이스로 분류되는 문서 지향(Document-Or
 ### 특성
   + NoSQL 데이터베이스? (Not Only SQL)
     + MongoDB Connector for BI나 Simba에서 개발한 MongoDB 커넥터를 보면, 여타 RDBMS와 비슷한 SQL을 사용 할 수 있음
-    + MongoDB에서는 외래키를 명시적으로 지원하지는 않지만, 논리적으로 문서 간의 관계를 만들어서 사용 할 수 있음
     + MongoDB에서는 $lookup이라는 Aggregation 기능을 제공하여 RDBMS와 비슷한 형태의 조인 쿼리를 수행 할 수 있음
   + 스키마 프리(Schema-Free)
+    + 사용 할 컬럼을 미리 정의하지 않고, 언제든지 필요한 시점에 데이터를 저장
+    + MongoDB는 모든 부분에 있어서 스키마 프리는 아님 (보조 인덱스를 생성 할 때, 먼저 인덱스를 구성하는 필드를 정의해야 함)
   + 비 관계형 데이터베이스
+<br/>
+
+### 기타
+  + MongoDB는 도큐먼트에서 _id라는 필드가 자동으로 그 도큐먼트의 프라이머리 키로 선정됨
+  + MongoDB는 데이터를 저장시, JSON 문자열을 그대로 저장하는 것이 아니라 문자열 기반의 JSON 텍스트를 BSON(Binary JSON)으로 변환해서 저장
+    + 공백이나 마크업 문자로 인해 부가적으로 저장 공간이 낭비되지 않음

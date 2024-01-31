@@ -1,5 +1,6 @@
 
 # Go
+Go는 범용 프로그래밍 언어로, 깔끔하고 간결하게 생산성 높은 프로그래밍을 만들 수 있음.
 <br/>
 
 ### 특성
@@ -109,29 +110,6 @@
       + package, import: 패키지와 임포트를 정의하는 키워드.
       + const, var: 상수와 변수를 정의하는 키워드.
 
-### 함수
-  + 함수 리턴 값이 여러개 가능
-  + 함수 선언부에 반환 타입을 적을때, 변수명까지 지정해서 사용 가능
-  + 예제
-    ```go
-    package main
-
-    func Divide(a, b int) (result int, success bool) {
-        if b == 0 {
-            result = 0
-            success = false
-            return
-        }
-        result = a / b
-        success = true
-        return
-    }
-	
-	  a, b := Divide(10, 2)
-	  fmt.Println(a, b) // 5 true
-	  ```
-<br/>
-
 ### 상수
   + 숫자형 상수
     ```go
@@ -207,6 +185,47 @@
     len(str2) = 5
 	  ```
 <br/>
+
+### 함수
+  + 함수 리턴 값이 여러개 가능
+  + 함수 선언부에 반환 타입을 적을때, 변수명까지 지정해서 사용 가능
+  + 예제
+    ```go
+    package main
+
+    func Divide(a, b int) (result int, success bool) {
+        if b == 0 {
+            result = 0
+            success = false
+            return
+        }
+        result = a / b
+        success = true
+        return
+    }
+	
+	  a, b := Divide(10, 2)
+	  fmt.Println(a, b) // 5 true
+	  ```
+<br/>
+
+### 메서드
+  + 함수에 리시버가 있다면 메서드
+    + 리시버는 함수 이름 앞에 옴
+  + 메서드는 특정 타입과 연결되어 해당 타입의 인스턴스에서만 호출됨
+  + 구조체, 인터페이스, 기본 타입에 연결 할 수 있음 (이름을 붙인 자료형이면 모두)
+    ```go
+    // Rectangle 구조체 정의
+    type Rectangle struct {
+        Width  float64
+        Height float64
+    }
+
+    // Rectangle에 Area 메서드 추가
+    func (r Rectangle) Area() float64 {
+        return r.Width * r.Height
+    }
+    ```
 
 ### interface
   + 추상화: 인터페이스는 객체의 공통 동작을 정의하기 때문에, 구체적인 구현에 대한 정보를 제공하지 않음. 따라서 인터페이스는 객체의 구현을 캡슐화하는 데 사용
@@ -431,57 +450,4 @@
     fmt.Println("b == nil")
   }
   ```
-<br/>
-
-### init.go
-  + 패키지 초기화: 패키지의 초기화 로직을 담당하며, 프로그램이 실행될 때 자동으로 호출됨(프로젝트의 루트 디렉토리나 패키지 디렉토리 내에 위치할 수 있음)
-  + 전역 변수 초기화: var 키워드를 사용하여 전역 변수를 선언하고 기본값을 설정 할 수 있음.
-  + 함수 초기화: 팩토리 메서드 또는 기타 초기화 코드를 포함하는 함수를 정의할 수 있음.
-  + 여러파일 가능함
-<br/>
-
-### main.go
-  + 실행 가능한 프로그램의 진입점(entry point)을 정의하는 파일
-  + C의 main함수와 같음
-<br/>
-
-### go.mod
-  + go의 모듈관리
-  + mod 초기화 및 go.mod 파일 생성
-    ```go
-    go mod init {package name}
-	  ```
-  + go.sum 파일 생성
-    ```go
-    go build 
-	  ```
-  + 소스내 의존성을 go.mod 파일에 정리
-    ```go
-    go tidy
-	  ```
-  + go.sum 파일 유효성 검사
-    ```go
-    go mod verify
-	  ```
-<br/>
-
-### cgo
-  + cgo는 Go 코드에서 C 코드를 호출할 수 있게 해주는 Go 언어 기능
-  + 장점
-	- C 라이브러리 및 시스템 호출에 액세스할 수 있음.
-	- 유연성과 확장성: Go의 간결함을 유지하면서 필요한 부분에 C 코드를 사용할 수 있음.
-	- 성능: C 코드는 일반적으로 Go 코드보다 빠르므로 성능이 중요한 부분에 사용할 수 있음.
-	- 하드웨어 및 시스템 액세스: C 라이브러리를 통해 하드웨어 장치 및 운영 체제 기능에 액세스할 수 있음.
-<br/>
-
-### Go 프레임워크
-  + gin 가장 오랫동안 개발되어 왔으며 현재 Star 1위. 무거움
-  + fiber fasthttp 기반, Express의 용이성과 Go의 원시 성능을 결합
-  + echo
-  + fasthttp
-    - 높은 성능: 뛰어난 성능을 자랑하며, net/http보다 최대 10배 빠르다고 알려져 있음.
-	- 낮은 메모리 사용량: 메모리 할당을 최소화하여 메모리 효율성이 뛰어남.
-	- 간결한 인터페이스: 쉽고 명확한 API를 제공하여 코드 작성이 간단함.
-	- 다양한 기능: 라우팅, 미들웨어, 쿠키, 세션, 바디 파서 등 웹 개발에 필요한 기능을 모두 제공함.
-	- 커뮤니티 지원: 활발한 커뮤니티가 지원하여 문제 해결 및 정보 요청이 쉽음.
 <br/>

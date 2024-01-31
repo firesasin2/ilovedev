@@ -3,7 +3,8 @@
 <br/>
 
 ### AdminManager
-  + 구조체 (AdminManager는 구조체)
+  + AdminManager 구조체
+    + package이름은 adminmanager
     ```go
     package adminmanager // package 이름 정의(main이 아님)
 
@@ -25,7 +26,14 @@
     ```
   + 선언
     ```go
+    import "github.com/acrav3/wauth/adminmanager"
+
     adminMgr, err = adminmanager.New(ctx, logging, client, AESKey)
+	if err != nil {
+		logging.Fatalln(err)
+	}
+
+    adminMgr2, err = NewAdminManager(ctx, logging, client, AESKey)
 	if err != nil {
 		logging.Fatalln(err)
 	}
