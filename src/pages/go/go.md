@@ -55,6 +55,101 @@ Go는 범용 프로그래밍 언어로, 깔끔하고 간결하게 생산성 높�
     ```
 <br/>
 
+### 주석
+  + 2가지의 주석을 제공함
+  + 한 줄 주석
+    ```go
+    // 한 줄 주석
+    ```
+  + 여러 줄 주석
+    ```go
+    /*
+    여러 줄 주석
+    두번째 줄
+    */
+    ```
+  + 함수의 주석
+    + 함수의 주석은 함수를 어떻게 사용해야 하는지 설명
+      ```go
+      package main
+
+      import "fmt"
+
+      // add 함수는 두 정수를 더한 결과를 반환합니다.
+      func add(a, b int) int {
+          return a + b
+      }
+
+      func main() {
+          // 두 정수를 더한 결과를 출력
+          result := add(3, 5)
+          fmt.Println("결과:", result)
+      }
+      ```
+<br/>
+
+### 세미콜론
+  + Go 언어는 세미콜론을 끝에 붙이지 않는 것처럼 보이지만, 사실 Go 컴파일러는 세미콜론으로 구분된 코드를 해석함
+  + 구문 분석기가 소스 코드를 스캔하는 과정에서 단순한 규칙을 적용하여 자동으로 붙이게 됨
+<br/>
+
+### 내장 인터페이스 (built-in interface type)
+  + 이미 정의된 표준 패키지에서 제공되는 인터페이스
+    + Stringer 인터페이스
+      ```go
+      type Stringer interface {
+          String() string
+      }
+      ```
+    + Error 인터페이스
+      ```go
+      type error interface {
+        Error() string
+      }
+      ```
+    + Reader 및 Writer 인터페이스
+      ```go
+      type Reader interface {
+          Read(p []byte) (n int, err error)
+      }
+
+      type Writer interface {
+          Write(p []byte) (n int, err error)
+      }
+      ```
+
+### error
+  + Golang에서 error는 Go 언어에서 예외 처리를 위한 특별한 타입
+  + Golang에서는 명시적으로 예외 처리를 하며, 함수가 에러를 반환할 때 이를 처리하는 것이 관례
+  + error 타입은 내장 인터페이스로서 다음과 같이 정의됨
+    ```go
+    // The error built-in interface type is the conventional interface for
+    // representing an error condition, with the nil value representing no error.
+    type error interface {
+      Error() string
+    }
+    ```
+  + errors.New() 로 새로운 오류 정의
+  + errors
+    ```go
+    package errors
+
+    // New returns an error that formats as the given text.
+    // Each call to New returns a distinct error value even if the text is identical.
+    func New(text string) error {
+      return &errorString{text}
+    }
+
+    // errorString is a trivial implementation of error.
+    type errorString struct {
+      s string
+    }
+
+    func (e *errorString) Error() string {
+      return e.s
+    }
+    ```
+
 ### 예약어
   + 예약어들은 식별자(변수명, 함수명 등)로 사용될 수 없음
   + 주요 예약어 목록
