@@ -105,27 +105,10 @@
   + 관리자 생성 핸들러
     ```go
     func HandlerCreateAdmin(w http.ResponseWriter, r *http.Request) {
-      logging.Debugln("HandlerCreateAdmin")
 
-      // 미들웨에서 Subjects값을 받아옴 (context에서 값을 가져옴)
-      v := r.Context().Value("Subjects")
-      if v == nil {
-        err = fmt.Errorf("can't find Subjects in r")
-        logging.Errorln(err)
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte(tool.ErrorStack(err, "E_DEFT_0000").Error()))
-        return
-      }
-
-      subjects, ok := v.([]info.Subject)
-      if !ok {
-        err = fmt.Errorf("subject type assertion err")
-        logging.Errorln(err)
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte(tool.ErrorStack(err, "E_DEFT_0000").Error()))
-        return
-      }
-
+      mw := w.(*MiddlewareResponseWriter)
+      logging.Verboseln(libutool.GetCurrentFunctionName() + makeLog(mw))
+      
       // 토큰 정책 조회
       tokenPolicy, err := tokenPolicyMgr.Get(r.Context(), "admin")
       if err != nil {
@@ -141,19 +124,25 @@
       newSubjects := []info.Subject{}
 
       // subjects를 순회하여 요청을 처리함
-      for _, subject := range subjects {
+      for _, subject := range *mw.subjects {
 
-        req := info.Admin{}
-        err = json.Unmarshal(subject.SubjectRequestByte, &req)
-        if err != nil {
+        switch subject.Result {
+        case string(libinfo.SUBJECT_RESULT_FAIL):
+          newSubjects = append(newSubjects, subject)
+          continue
+        default:
+        }
+
+        req, ok := subject.SubjectRequestMiddleware.(libinfo.Node)
+        if !ok {
+          err = fmt.Errorf("conversion failed")
           logging.Errorln(err)
           subject.Result = string(info.SUBJECT_RESULT_FAIL)
           subject.ResultDetail = tool.ErrorStack(err, "E_DEFT_0000").Error()
           newSubjects = append(newSubjects, subject)
           continue
         }
-        subject.SubjectRequestByte = []byte{}
-
+        
         subject.Subject_ID = req.ID
         subject.ID = tool.NewUniqueID()
 
