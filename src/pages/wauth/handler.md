@@ -350,6 +350,8 @@
         newSubjects = append(newSubjects, subject)
       }
 
+      mw.NewSubjects = &newSubjects
+
       // 결과 전송
       b, err := json.Marshal(newSubjects)
       if err != nil {
