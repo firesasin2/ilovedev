@@ -107,15 +107,6 @@
     func HandlerCreateAdmin(w http.ResponseWriter, r *http.Request) {
       logging.Debugln("HandlerCreateAdmin")
 
-      // request를 분석해서, JWT토큰 정보를 가져옴
-      claims, _, err := getClaims(r)
-      if err != nil {
-        logging.Errorln(err)
-        w.WriteHeader(http.StatusUnauthorized)
-        w.Write([]byte(tool.ErrorStack(err, "E_DEFT_0000").Error()))
-        return
-      }
-
       // 미들웨에서 Subjects값을 받아옴 (context에서 값을 가져옴)
       v := r.Context().Value("Subjects")
       if v == nil {
@@ -235,7 +226,7 @@
         }
 
         // 로직: 비밀번호 복호화
-        if claims.Person.Type != string(info.PERSON_TYPE_SERVICE) && claims.Person.Type != string(info.PERSON_TYPE_APITOKEN) {
+        if mw.claims.Person.Type != string(info.PERSON_TYPE_SERVICE) && mw.claims.Person.Type != string(info.PERSON_TYPE_APITOKEN) {
           if len(req.Password) <= 32 {
             err = fmt.Errorf("front <-> go AES 암복호화 오류: 32자리보다 커야 함")
             logging.Errorln(err)
