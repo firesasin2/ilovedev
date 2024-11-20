@@ -32,11 +32,6 @@
 	if err != nil {
 		logging.Fatalln(err)
 	}
-
-    adminMgr2, err = NewAdminManager(ctx, logging, client, AESKey)
-	if err != nil {
-		logging.Fatalln(err)
-	}
     
     func New(ctx context.Context, l *tool.Logging, client *libmongo.MongoClient, AESKey string) (*AdminManager, error) {
 
