@@ -327,21 +327,6 @@
           logging.Errorln(err)
         }
 
-        // 로직: 연결정보를 subject에 담습니다.
-        subjectRelatedInfo := bson.M{}
-        subjectRelatedInfo, err = makeSubjectRelatedInfo(r.Context(), subjectRelatedInfo, old, r)
-        if err != nil {
-          logging.Errorln(err)
-        } else {
-          subject.SubjectRelatedInfo = subjectRelatedInfo
-        }
-        subjectRelatedInfo, err = makeSubjectRelatedInfo(r.Context(), subjectRelatedInfo, new, r)
-        if err != nil {
-          logging.Errorln(err)
-        } else {
-          subject.SubjectRelatedInfo = subjectRelatedInfo
-        }
-
         // 성공
         subject.Result = string(info.SUBJECT_RESULT_SUCCESS)
         subject.SubjectBefore = nil
