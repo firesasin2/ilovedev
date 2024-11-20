@@ -313,20 +313,6 @@
           continue
         }
 
-        // 로직: 생성 알림
-        adminInbox := info.AdminInbox{
-          Admin_ID:        req.ID,
-          CreateTimestamp: now.Unix(),
-          SenderType:      string(info.PERSON_TYPE_SERVICE),
-          SenderID:        string(info.PROCESS_NAME_WAUTH),
-          Titre:           "관리자 생성",
-          Message:         inboxMsg,
-        }
-        _, _, err = adminInboxMgr.Create(r.Context(), adminInbox)
-        if err != nil {
-          logging.Errorln(err)
-        }
-
         // 성공
         subject.Result = string(info.SUBJECT_RESULT_SUCCESS)
         subject.SubjectBefore = nil
