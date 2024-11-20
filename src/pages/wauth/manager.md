@@ -261,19 +261,10 @@
 
         newAdmin := oldAdmin
 
-        syncAttributes := []string{}
-        if onlyUpdateTag {
-            // 로직: update가 있는 속성들 이름을 가져옵니다.
-            syncAttributes, err = tool.GetAttributesName(info.Admin{}, "update", true)
-            if err != nil {
-                return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
-            }
-        } else {
-            // 로직: 모든 속성들 이름을 가져옵니다.
-            t := reflect.TypeOf(info.Admin{})
-            for i := 0; i < t.NumField(); i++ {
-                syncAttributes = append(syncAttributes, t.Field(i).Name)
-            }
+        // 로직: update가 있는 속성들 이름을 가져옵니다.
+        syncAttributes, err := tool.GetAttributesName(info.Admin{}, "update", true)
+        if err != nil {
+            return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
         }
 
         // 로직: 동기화 할 속성들의 값을 newAdmin에 넣습니다.
@@ -281,7 +272,11 @@
             r := reflect.ValueOf(admin)
             f := reflect.Indirect(r).FieldByName(syncAttribute)
 
-            tool.SetValueToStruct(&newAdmin, syncAttribute, f)
+            err = tool.SetValueToStruct(&newAdmin, syncAttribute, f)
+            if err != nil {
+                m.Log.Errorln(err)
+                return info.Admin{}, info.Admin{}, tool.ErrorStack(err, "E_DEFT_0000")
+            }
         }
 
         // newAdmin를 bson.M으로 변환
